@@ -3,6 +3,7 @@ import { json } from './middlewares/json.js'
 import { Database } from './database.js'
 import { randomUUID } from 'node:crypto'
 import { routes } from './routes.js'
+import { extractQueryParams } from './utils/extract-query-params.js'
 
 //commonjs => require
 //es modules => import/export
@@ -30,7 +31,11 @@ const server = http.createServer(async (request, response)=>{
   if(route){
     const routeParams = request.url.match(route.path)
 
-    request.params = { ...routeParams.groups }
+    console.log(extractQueryParams(routeParams.groups.query))
+
+    const {query, ...params} = routeParams.groups
+    request.params = params
+    request.query = query ? extractQueryParams(query) : {}
 
     return route.handler(request, response)
   }

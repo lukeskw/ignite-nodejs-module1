@@ -7,7 +7,7 @@ export function buildRoutePath(path){
 
   //console.log(path.matchAll(routeParametersRegex))
 
-  const pathRegex = new RegExp(`^${pathWithParams}`)
+  const pathRegex = new RegExp(`^${pathWithParams}(?<query>\\?(.*))?$`)
 
   return pathRegex
 
