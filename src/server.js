@@ -13,6 +13,10 @@ import { routes } from './routes.js'
 
 //http status codes => 200, 201, 400, 404, 500
 
+// major ways to the frontend send information
+// Query parameters: http://localhost:3333/users?userId=1&name=Luke  -> userId=1 and name=Luke are the query params, stateful url. Used in filters, paginations, optional params
+// Route parameters: http://localhost:3333/users/1 -> /1 is the Route param, used to identify a resource
+// Request Body: used to send Form data, sent via HTTPS and are cryptographed
 
 const server = http.createServer(async (request, response)=>{
   const { method, url } = request
@@ -20,10 +24,14 @@ const server = http.createServer(async (request, response)=>{
   await json(request, response)
 
   const route = routes.find(route => {
-    return route.method === method && route.path === url
+    return route.method === method && route.path.test(url)
   })
 
   if(route){
+    const routeParams = request.url.match(route.path)
+
+    console.log(routeParams)
+
     return route.handler(request, response)
   }
 
